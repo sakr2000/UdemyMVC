@@ -27,6 +27,7 @@ namespace UdemyMVC.Controllers
 			return View("Register" , new RegisterViewModels());
 		}
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Register(RegisterViewModels vm )
 		{
 			if (ModelState.IsValid)

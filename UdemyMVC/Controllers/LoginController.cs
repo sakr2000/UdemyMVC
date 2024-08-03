@@ -20,6 +20,8 @@ namespace UdemyMVC.Controllers
             return View("Login",new LoginViewModelcs());
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Login(LoginViewModelcs vm ) {
             if (ModelState.IsValid) {
           IdentityUser? userModel= await userManager.FindByEmailAsync(vm.Email);

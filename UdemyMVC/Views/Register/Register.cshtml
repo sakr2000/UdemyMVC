@@ -2,7 +2,9 @@
 
 @{
     ViewData["Title"] = "Register";
-}
+    Layout = "_MainView";
+} 
+@*
 
 <h1>Register</h1>
 
@@ -53,6 +55,83 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+ *************************@
+<section class=" bg-image container-fluid v-100"
+  style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+  <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+    <div class="container-fluid h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+          <div class="card" style="border-radius: 15px;">
+            <div class="card-body p-5">
+              <h2 class="text-uppercase text-center mb-2">Create an account</h2>
+
+              <form asp-action="Register">
+              <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div data-mdb-input-init class="form-outline mb-2">
+                  <label class="form-label" asp-for="FullName">Your Name</label>
+                  <input asp-for="FullName" class="form-control form-control-lg" />
+                  <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+
+                <div data-mdb-input-init class="form-outline mb-2">
+                  <label class="form-label" asp-for="Email">Your Email</label>
+                  <input asp-for="Email" class="form-control form-control-lg" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div data-mdb-input-init class="form-outline mb-2">
+                  <label class="form-label" for="form3Example4cg">Password</label>
+                  <input asp-for="Password" class="form-control form-control-lg" />
+           <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div data-mdb-input-init class="form-outline mb-2">
+                  <label class="form-label" asp-for="ConfirmPassword">Repeat your password</label>
+                  <input asp-for="ConfirmPassword" class="form-control form-control-lg" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
+                </div>
+
+                      <div data-mdb-input-init class="mb-2 d-flex ">
+                          <div class="align-items-center d-flex me-1">
+                                        <label class="form-label">User :&ensp; </label>
+                 <input asp-for="Role" class="form-check" type="radio" value="User" checked />
+                                    </div >
+                <div class="align-items-center d-flex ms-1">
+                    <label class="form-label">Instructor :&ensp; </label>
+                <input asp-for="Role" class="form-check " type="radio" value="Instructor" />
+               </div>
+               <span asp-validation-for="Role" class="text-danger"></span>
+                                </div> 
+             <div data-mdb-input-init class="form-outline mb-2">
+         <label class="form-check-label" asp-for="RememberMe">Remember Me</label>
+       <input asp-for="RememberMe" class="form-check-input " />
+                                </div>
+
+                <div class="d-flex justify-content-center">
+                  <button  type="submit" data-mdb-button-init
+                    data-mdb-ripple-init class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Register</button>
+                </div>
+
+                <p class="text-center text-muted mt-2 mb-0">Have already an account? <a asp-controller="Login"
+                    class="fw-bold text-body" asp-action="Login"><u>Login here</u></a></p>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
