@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using UdemyMVC.AttributeValidation;
+
 
 namespace UdemyMVC.ViewModels
 {
@@ -17,7 +19,15 @@ namespace UdemyMVC.ViewModels
 		[DataType(DataType.Password)]
 		[Compare("Password")]
 		public string ConfirmPassword { get; set; }
-		public string Role { get; set; }
+		[Required]
+        public string Address { get; set; }
+		
+        [DataType(DataType.Upload)]
+        [Display(Name = "Profile Picture")]
+        [MaxFileSize(5 * 1024 * 1024)] // 5 MB
+        [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png" })]
+        public string Image { get; set; }
+        public string Role { get; set; }
 		public bool RememberMe { get; set; }	 
 	}
 }

@@ -12,7 +12,7 @@ namespace UdemyMVC.Models
 		[ForeignKey("User")]
 
 		[Required]
-		public int UserID { get; set;  } 
+		public string UserID { get; set;  } 
 
 		[ForeignKey("UserID")]
          public virtual User User { get; set;  }

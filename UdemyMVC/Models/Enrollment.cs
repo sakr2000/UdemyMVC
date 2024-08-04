@@ -7,7 +7,7 @@ namespace UdemyMVC.Models
 	{ 
 
         public int CourseID { get; set; }
-        public int UserID { get; set; }
+        public string UserID { get; set; }
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime EnrollmentDate { get; set; }= DateTime.Now; 

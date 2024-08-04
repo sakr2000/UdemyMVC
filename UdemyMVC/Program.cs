@@ -19,7 +19,7 @@ namespace UdemyMVC
 				option.UseSqlServer(builder.Configuration.GetConnectionString("cs")); 
 			});
 			//Inject UserManager,IdentityRole,SignInManager
-			builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+			builder.Services.AddIdentity<ApplicationModel, IdentityRole>()
 				.AddEntityFrameworkStores<UdemyDataBase>(); 
 			var app = builder.Build();
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UdemyMVC.Models;
 
@@ -11,9 +12,11 @@ using UdemyMVC.Models;
 namespace UdemyMVC.Migrations
 {
     [DbContext(typeof(UdemyDataBase))]
-    partial class UdemyDataBaseModelSnapshot : ModelSnapshot
+    [Migration("20240804162433_v2")]
+    partial class v2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -377,6 +380,23 @@ namespace UdemyMVC.Migrations
                     b.ToTable("Instructors");
                 });
 
+            modelBuilder.Entity("UdemyMVC.Models.Role", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("UdemyMVC.Models.User", b =>
                 {
                     b.Property<string>("ID")
@@ -398,11 +418,16 @@ namespace UdemyMVC.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleName")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RoleID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
+
+                    b.HasIndex("RoleID");
 
                     b.ToTable("Users");
                 });
@@ -552,6 +577,17 @@ namespace UdemyMVC.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("UdemyMVC.Models.User", b =>
+                {
+                    b.HasOne("UdemyMVC.Models.Role", "Role")
+                        .WithMany("User")
+                        .HasForeignKey("RoleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("UdemyMVC.Models.Course", b =>
                 {
                     b.Navigation("CategoryCourses");
@@ -566,6 +602,11 @@ namespace UdemyMVC.Migrations
             modelBuilder.Entity("UdemyMVC.Models.Instructor", b =>
                 {
                     b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("UdemyMVC.Models.Role", b =>
+                {
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("UdemyMVC.Models.User", b =>

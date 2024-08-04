@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using UdemyMVC.Models;
 using UdemyMVC.ServiceLayer;
 using UdemyMVC.ViewModels;
@@ -8,16 +9,19 @@ namespace UdemyMVC.Controllers
 {
 	public class RegisterController : Controller
 	{
-		private readonly UserManager<IdentityUser> userManager;
-		private readonly SignInManager<IdentityUser> signInManager;
+		UdemyDataBase context; 
+		private readonly UserManager<ApplicationModel> userManager;
+		private readonly SignInManager<ApplicationModel> signInManager;
 		private readonly RoleManager<IdentityRole> roleManager;
 
-		public RegisterController(UserManager<IdentityUser> userManager ,SignInManager<IdentityUser>signInManager,
-			RoleManager<IdentityRole> roleManager)
+		public RegisterController(UserManager<ApplicationModel> userManager ,SignInManager<ApplicationModel>signInManager,
+			RoleManager<IdentityRole> roleManager , 
+			UdemyDataBase _context)
         {
 			this.userManager = userManager; 
 			this.signInManager = signInManager;
 			this.roleManager = roleManager;
+			this.context = _context;
 		}
 
 
@@ -32,6 +36,8 @@ namespace UdemyMVC.Controllers
 		{
 			if (ModelState.IsValid)
 			{
+				
+				User user;
 				if (!await roleManager.RoleExistsAsync(vm.Role))
 				{
 					IdentityResult result1 = await roleManager.CreateAsync(new IdentityRole(vm.Role)) ; 
@@ -39,9 +45,12 @@ namespace UdemyMVC.Controllers
 						ModelState.AddModelError("", "failed to create role!"); 
 						return View(vm);	
 					}
-				}
-				
-					IdentityUser userModel = RegisterUser.SignToUser(vm);
+
+					
+
+                }
+
+                var userModel = RegisterUser.SignToUser(vm);//var for any change in IdenetityUser(clean code)
 					IdentityResult result=await userManager.CreateAsync(userModel , vm.Password);
 				if (!result.Succeeded)
 				{
@@ -55,7 +64,13 @@ namespace UdemyMVC.Controllers
 					ModelState.AddModelError("", "Failed to assign Role");
 					return View(vm); 
 				}
-				
+				 user = RegisterUser.signApplicationModelToUser(userModel);
+			user.RoleName = vm.Role;
+                context.Users.Add(user);
+				List<Claim> claims = new List<Claim>();
+				claims.Add(new Claim(ClaimTypes.NameIdentifier, user.ID));
+	 		await signInManager.SignInWithClaimsAsync(userModel, vm.RememberMe, claims); 
+				context.SaveChanges();
 				return RedirectToAction("Index" ,"Home");
 				} 
 			

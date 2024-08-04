@@ -5,13 +5,13 @@
 namespace UdemyMVC.Migrations
 {
     /// <inheritdoc />
-    public partial class vii : Migration
+    public partial class v3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ConfirmPassword",
+                name: "Password",
                 table: "Users");
         }
 
@@ -19,7 +19,7 @@ namespace UdemyMVC.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "ConfirmPassword",
+                name: "Password",
                 table: "Users",
                 type: "nvarchar(max)",
                 nullable: false,

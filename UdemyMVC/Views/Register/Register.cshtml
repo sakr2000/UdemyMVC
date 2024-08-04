@@ -94,6 +94,22 @@
 
                 </div>
 
+
+            <div data-mdb-input-init class="form-outline mb-2">
+                   <label class="form-label" asp-for="Address">Address</label>
+                <input asp-for="Address" class="form-control form-control-lg" />
+                   <span asp-validation-for="Address" class="text-danger"></span>
+
+                 </div>
+
+
+                                <div data-mdb-input-init class="form-outline mb-2">
+                                    <label class="form-label" asp-for="Image">Upload Image</label>
+                                    <input asp-for="Image" class="form-control form-control-lg" type="file"/>
+                                    <span asp-validation-for="Image" class="text-danger"></span>
+
+                                </div>
+
                       <div data-mdb-input-init class="mb-2 d-flex ">
                           <div class="align-items-center d-flex me-1">
                                         <label class="form-label">User :&ensp; </label>
@@ -115,7 +131,7 @@
                     data-mdb-ripple-init class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Register</button>
                 </div>
 
-                <p class="text-center text-muted mt-2 mb-0">Have already an account? <a asp-controller="Login"
+                <p class="text-center text-muted mt-2 mb-0">Have already an account? <a asp-controller="Account"
                     class="fw-bold text-body" asp-action="Login"><u>Login here</u></a></p>
 
               </form>
