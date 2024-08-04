@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using UdemyMVC.AttributeValidation;
 
 namespace UdemyMVC.Models
 {
@@ -16,6 +17,13 @@ namespace UdemyMVC.Models
 		[Required]
 		[Range(minimum:400 , maximum:4000)]
 		public int Price { get; set; }
+		[Required]
+        [DataType(DataType.Upload)]
+        [Display(Name = "Profile Picture")]
+        [MaxFileSize(5 * 1024 * 1024)] // 5 MB
+        [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png" })]
+
+        public string CourseImage { get; set; }	
 		public ICollection<Chapter> Chapters { get; set; } // Navigation property
 
 
