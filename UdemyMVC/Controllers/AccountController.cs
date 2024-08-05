@@ -19,10 +19,17 @@ namespace UdemyMVC.Controllers
         }
         public IActionResult Login()
         {
-            return View("Login", new LoginViewModelcs());
+            if (signInManager.IsSignedIn(User)) {
+                return RedirectToAction("Index", "Home");
+            }
+                return View("Login", new LoginViewModelcs());
         }
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModelcs vm) {
+            if (signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             if (ModelState.IsValid) { 
        var result=    await userManager.FindByEmailAsync(vm.Email);
                 if (result == null) {
@@ -38,6 +45,18 @@ namespace UdemyMVC.Controllers
          return       RedirectToAction("Index", "Home");  
             }
             return View("Login", vm); 
+        }
+
+        public async Task<IActionResult> Logout() {
+            if (signInManager.IsSignedIn(User))
+            {
+            await signInManager.SignOutAsync();
+                return RedirectToAction("Login", "Account");
+            }
+            else {
+                return RedirectToAction("Login", "Account");
+            }
+
         }
       
     }

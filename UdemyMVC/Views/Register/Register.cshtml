@@ -66,7 +66,7 @@
             <div class="card-body p-5">
               <h2 class="text-uppercase text-center mb-2">Create an account</h2>
 
-              <form asp-action="Register">
+              <form asp-action="Register" enctype="multipart/form-data">
               <div asp-validation-summary="All" class="text-danger"></div>
 
                 <div data-mdb-input-init class="form-outline mb-2">
@@ -103,12 +103,10 @@
                  </div>
 
 
-                                <div data-mdb-input-init class="form-outline mb-2">
-                                    <label class="form-label" asp-for="Image">Upload Image</label>
-                                    <input asp-for="Image" class="form-control form-control-lg" type="file"/>
-                                    <span asp-validation-for="Image" class="text-danger"></span>
-
-                                </div>
+            <div data-mdb-input-init class="form-outline mb-2">
+           <label class="form-label"  >Upload Image</label>
+           <input name="photo" class="form-control form-control-lg" type="file"required />
+             </div>
 
                       <div data-mdb-input-init class="mb-2 d-flex ">
                           <div class="align-items-center d-flex me-1">

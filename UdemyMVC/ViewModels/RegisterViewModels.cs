@@ -22,11 +22,7 @@ namespace UdemyMVC.ViewModels
 		[Required]
         public string Address { get; set; }
 		
-        [DataType(DataType.Upload)]
-        [Display(Name = "Profile Picture")]
-        [MaxFileSize(5 * 1024 * 1024)] // 5 MB
-        [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png" })]
-        public string Image { get; set; }
+        public string? Image { get; set; }
         public string Role { get; set; }
 		public bool RememberMe { get; set; }	 
 	}

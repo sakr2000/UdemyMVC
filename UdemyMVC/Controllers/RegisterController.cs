@@ -13,70 +13,117 @@ namespace UdemyMVC.Controllers
 		private readonly UserManager<ApplicationModel> userManager;
 		private readonly SignInManager<ApplicationModel> signInManager;
 		private readonly RoleManager<IdentityRole> roleManager;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-		public RegisterController(UserManager<ApplicationModel> userManager ,SignInManager<ApplicationModel>signInManager,
-			RoleManager<IdentityRole> roleManager , 
-			UdemyDataBase _context)
+        public RegisterController(UserManager<ApplicationModel> userManager ,SignInManager<ApplicationModel>signInManager,
+			RoleManager<IdentityRole> roleManager ,
+            IWebHostEnvironment webHostEnvironment,
+            UdemyDataBase _context)
         {
 			this.userManager = userManager; 
 			this.signInManager = signInManager;
 			this.roleManager = roleManager;
-			this.context = _context;
+            this.webHostEnvironment = webHostEnvironment;
+            this.context = _context;
 		}
 
 
 		[HttpGet]
 		public IActionResult Register()
-		{ 
-			return View("Register" , new RegisterViewModels());
+		{
+            if (signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View("Register" , new RegisterViewModels());
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Register(RegisterViewModels vm )
+		public async Task<IActionResult> Register(RegisterViewModels vm ,IFormFile photo)
 		{
-			if (ModelState.IsValid)
-			{
-				
-				User user;
-				if (!await roleManager.RoleExistsAsync(vm.Role))
+			if (signInManager.IsSignedIn(User))
+			{ 
+			return RedirectToAction("Index", "Home");	
+			}
+				if (ModelState.IsValid)
 				{
-					IdentityResult result1 = await roleManager.CreateAsync(new IdentityRole(vm.Role)) ; 
-					if (!result1.Succeeded) {
-						ModelState.AddModelError("", "failed to create role!"); 
-						return View(vm);	
+
+					User user;
+					if (!await roleManager.RoleExistsAsync(vm.Role))
+					{
+						IdentityResult result1 = await roleManager.CreateAsync(new IdentityRole(vm.Role));
+						if (!result1.Succeeded)
+						{
+							ModelState.AddModelError("", "failed to create role!");
+							return View(vm);
+						}
+
+
+
 					}
 
-					
-
-                }
-
-                var userModel = RegisterUser.SignToUser(vm);//var for any change in IdenetityUser(clean code)
-					IdentityResult result=await userManager.CreateAsync(userModel , vm.Password);
-				if (!result.Succeeded)
+				string? img = GetPhotoPath(photo);
+				if (img == null)
 				{
-					foreach (var err in result.Errors) {
-						ModelState.AddModelError("", err.Description); 
-					} 
+					ModelState.AddModelError("", "Invalid Photo selected!");
 					return View(vm);
-				} 
-				IdentityResult role = await userManager.AddToRoleAsync(userModel, vm.Role);
-				if (!role.Succeeded) {
-					ModelState.AddModelError("", "Failed to assign Role");
-					return View(vm); 
+
 				}
-				 user = RegisterUser.signApplicationModelToUser(userModel);
-			user.RoleName = vm.Role;
-                context.Users.Add(user);
-				List<Claim> claims = new List<Claim>();
-				claims.Add(new Claim(ClaimTypes.NameIdentifier, user.ID));
-	 		await signInManager.SignInWithClaimsAsync(userModel, vm.RememberMe, claims); 
-				context.SaveChanges();
-				return RedirectToAction("Index" ,"Home");
-				} 
-			
+				vm.Image = img;
 				
-			
-		return View(vm);
+				var userModel = RegisterUser.SignToUser(vm);//var for any change in IdenetityUser(clean code)
+				
+				IdentityResult result = await userManager.CreateAsync(userModel, vm.Password);
+					if (!result.Succeeded)
+					{
+						foreach (var err in result.Errors)
+						{
+							ModelState.AddModelError("", err.Description);
+						}
+						return View(vm);
+					}
+					IdentityResult role = await userManager.AddToRoleAsync(userModel, vm.Role);
+					if (!role.Succeeded)
+					{
+						ModelState.AddModelError("", "Failed to assign Role");
+						return View(vm);
+					}
+					user = RegisterUser.signApplicationModelToUser(userModel);
+					user.RoleName = vm.Role;
+					context.Users.Add(user);
+					List<Claim> claims = new List<Claim>();
+					claims.Add(new Claim(ClaimTypes.NameIdentifier, user.ID));
+					await signInManager.SignInWithClaimsAsync(userModel, vm.RememberMe, claims);
+					context.SaveChanges();
+					return RedirectToAction("Index", "Home");
+				}
+
+
+
+				return View(vm);
+			}
+		private  string? GetPhotoPath(IFormFile imageFile)
+		{
+
+			if (imageFile != null && imageFile.Length > 0)
+			{
+				var uploadPath = Path.Combine(webHostEnvironment.WebRootPath, "uploads");
+				if (!Directory.Exists(uploadPath))
+				{
+					Directory.CreateDirectory(uploadPath);
+				}
+				var uniquePath = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+				var photoPath = Path.Combine(uploadPath, uniquePath);
+				using (var filestream = new FileStream(photoPath, FileMode.Create))
+				{
+			imageFile.CopyTo(filestream);
+					filestream.Close();
+				}
+				return $"/uploads/+{uniquePath}"; 
+			}
+			return null;
+
+
 		}
 	}
 }
