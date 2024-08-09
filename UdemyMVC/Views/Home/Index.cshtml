@@ -2,7 +2,41 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@section Styles {
+    <link href="~/css/home.css" rel="stylesheet" />
+}
+
+<section class="w-100 mt-0">
+    <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://picsum.photos/1200/400.webp" class="d-block w-100" alt="Slide-1">
+            </div>
+            <div class="carousel-item">
+                <img src="https://picsum.photos/1200/400.webp" class="d-block w-100" alt="Slide-2">
+            </div>
+            <div class="carousel-item">
+                <img src="https://picsum.photos/1200/400.webp" class="d-block w-100" alt="Slide-3">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Parteners Section -->
+<section class="logos p-5 mt-4 w-100 d-flex align-items-center justify-content-evenly">
+    <img src="assets/images/logoipsum-214.svg" alt="logoipsum" />
+    <img src="assets/images/logoipsum-330.svg" alt="logoipsum" />
+    <img src="assets/images/logoipsum-261.svg" alt="logoipsum" />
+    <img src="assets/images/logoipsum-241.svg" alt="logoipsum" />
+    <img src="assets/images/logoipsum-321.svg" alt="logoipsum" />
+    <img src="assets/images/logoipsum-235.svg" alt="logoipsum" />
+</section>
+
+
+
+
+
+@section Scripts {
+    <script src="~/js/home.js"></script>
+}

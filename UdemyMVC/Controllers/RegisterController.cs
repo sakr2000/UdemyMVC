@@ -43,7 +43,7 @@ namespace UdemyMVC.Controllers
 		{
 			if (signInManager.IsSignedIn(User))
 			{ 
-			return RedirectToAction("Index", "Home");	
+				return RedirectToAction("Index", "Home");	
 			}
 				if (ModelState.IsValid)
 				{
