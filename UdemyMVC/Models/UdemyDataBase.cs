@@ -14,6 +14,7 @@ namespace UdemyMVC.Models
 		public DbSet<CategoryCourse> CategoryCourses { get; set; }
 		public DbSet<Chapter> chapters { get; set; } 
 		public DbSet<CourseRate>CourseRates { get; set; }	
+		public DbSet<Topic> Topics { get; set; }
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.UseSqlServer("Server=DESKTOP-OAJHR63\\SQLEXPRESS;Database=UdemyDataBase;Trusted_Connection=True;Encrypt=False");
