@@ -3,8 +3,31 @@ using UdemyMVC.Models;
 
 namespace UdemyMVC.Repositories
 {
-    public class CourseRateRepository : Repository<CourseRate>, ICourseRateRepository
+    public class CourseRateRepository : ICourseRateRepository
     {
-        public CourseRateRepository(DbContext context) : base(context) { }
+        public void Add(CourseRate entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(object id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<CourseRate>? GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public CourseRate? GetById(object id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(CourseRate entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

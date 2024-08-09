@@ -5,13 +5,36 @@ using UdemyMVC.Models;
 
 namespace UdemyMVC.Repositories
 {
-    public class CourseRepository : Repository<Course>, ICourseRepository
+    public class CourseRepository : ICourseRepository
     {
-        public CourseRepository(DbContext context) : base(context) { }
-
-        public async Task<IEnumerable<Course>> GetCoursesByInstructorIdAsync(int instructorId)
+        public void Add(Course entity)
         {
-            return await _dbSet.Where(c => c.InstructorID == instructorId).ToListAsync();
+            throw new NotImplementedException();
+        }
+
+        public void Delete(object id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Course>? GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Course? GetById(object id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Course>> GetCoursesByInstructorIdAsync(int instructorId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(Course entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }
