@@ -14,9 +14,9 @@ namespace UdemyMVC.Controllers
         {
 			this.context = context;
 		}
-        public IActionResult GetUser()
+        public async Task<IActionResult> GetUser()
 		{
-			IEnumerable<User>? users = context.GetAll();
+			IEnumerable<User>? users =  await context.GetAllAsync();
 			return View("getUser",users);
 		}
 	}

@@ -5,36 +5,23 @@ using UdemyMVC.Models;
 
 namespace UdemyMVC.Repositories
 {
-    public class CourseRepository : ICourseRepository
+    public class CourseRepository : Repository<Course>, ICourseRepository
     {
-        public void Add(Course entity)
-        {
-            throw new NotImplementedException();
-        }
+        public CourseRepository(UdemyDataBase context) : base(context) { }
 
-        public void Delete(object id)
+        public async Task<IEnumerable<Course>> GetCoursesByInstructorIdAsync(int instructorId)
         {
-            throw new NotImplementedException();
+            return await _dbSet.Where(c => c.InstructorID == instructorId).ToListAsync();
         }
-
-        public IEnumerable<Course>? GetAll()
+        public async Task<Course?> GetCoursesByCourseIdAsync(int courseId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Course? GetById(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Course>> GetCoursesByInstructorIdAsync(int instructorId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Course entity)
-        {
-            throw new NotImplementedException();
+            return await _dbSet
+                .Include(c => c.Instructor).ThenInclude(c => c.User)
+                .Include(c => c.CourseRates)
+                .Include(c => c.CategoryCourses).ThenInclude(c => c.Category)
+                .Include(c => c.Enrollment)
+                .Include(c => c.Chapters)
+                .Where(c => c.ID == courseId).FirstOrDefaultAsync();
         }
     }
 }

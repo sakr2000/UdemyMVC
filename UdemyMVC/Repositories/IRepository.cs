@@ -4,10 +4,10 @@ namespace UdemyMVC.Repositories
 {
     public interface IRepository<T> where T : class
     {
-        IEnumerable<T>? GetAll();
-        T? GetById(object id);
-         void Add(T entity);
-         void Update(T entity);
-         void Delete(object id);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetByIdAsync(object id);
+        Task AddAsync(T entity);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(object id);
     }
 }
