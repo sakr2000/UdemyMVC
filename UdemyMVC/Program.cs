@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using UdemyMVC.Models;
+using UdemyMVC.Repositories;
 
 namespace UdemyMVC
 {
@@ -20,7 +21,9 @@ namespace UdemyMVC
 			});
 			//Inject UserManager,IdentityRole,SignInManager
 			builder.Services.AddIdentity<ApplicationModel, IdentityRole>()
-				.AddEntityFrameworkStores<UdemyDataBase>(); 
+				.AddEntityFrameworkStores<UdemyDataBase>();
+			//inject Repositories
+			builder.Services.AddScoped<IUserRepository, UserRepository>();
 			var app = builder.Build();
 
 			// Configure the HTTP request pipeline.
@@ -37,7 +40,7 @@ namespace UdemyMVC
 
 			app.MapControllerRoute(
 				name: "default",
-				pattern: "{controller=Home}/{action=Index}/{id?}");
+				pattern: "{controller=Account}/{action=Login}/{id?}");
 
 			app.Run();
 		}
