@@ -6,9 +6,7 @@ namespace UdemyMVC.Models
 {
 	public class UdemyDataBase:IdentityDbContext<ApplicationModel>
 	{
-        public  DbSet<User> Users{ get; set; }
         public  DbSet<Course> Courses{ get; set; }
-        public  DbSet<Instructor> Instructors{ get; set; }
 		public DbSet<Enrollment> Enrollments{ get; set; } 
 		public DbSet<Category> Categories{ get; set; } 
 		public DbSet<CategoryCourse> CategoryCourses { get; set; }

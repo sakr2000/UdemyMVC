@@ -5,7 +5,7 @@ using UdemyMVC.ViewModels;
 
 namespace UdemyMVC.Controllers
 {
-        
+    [Authorize(Roles ="Admin")] 
     public class RoleController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;

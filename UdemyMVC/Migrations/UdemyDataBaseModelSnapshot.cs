@@ -178,6 +178,9 @@ namespace UdemyMVC.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Field")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -276,10 +279,6 @@ namespace UdemyMVC.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Topics")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("ID");
 
                     b.HasIndex("CourseId");
@@ -308,8 +307,12 @@ namespace UdemyMVC.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("InstructorID")
+                    b.Property<int>("Hours")
                         .HasColumnType("int");
+
+                    b.Property<string>("InstructorID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Price")
                         .HasColumnType("int");
@@ -319,14 +322,9 @@ namespace UdemyMVC.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("UserID")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("ID");
 
                     b.HasIndex("InstructorID");
-
-                    b.HasIndex("UserID");
 
                     b.ToTable("Courses");
                 });
@@ -357,33 +355,11 @@ namespace UdemyMVC.Migrations
                     b.Property<string>("UserID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("EnrollmentDate")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("CourseID", "UserID");
 
                     b.HasIndex("UserID");
 
                     b.ToTable("Enrollments");
-                });
-
-            modelBuilder.Entity("UdemyMVC.Models.Instructor", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("UserID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("Instructors");
                 });
 
             modelBuilder.Entity("UdemyMVC.Models.Topic", b =>
@@ -406,36 +382,6 @@ namespace UdemyMVC.Migrations
                     b.HasIndex("ChapterID");
 
                     b.ToTable("Topics");
-                });
-
-            modelBuilder.Entity("UdemyMVC.Models.User", b =>
-                {
-                    b.Property<string>("ID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -492,7 +438,7 @@ namespace UdemyMVC.Migrations
             modelBuilder.Entity("UdemyMVC.Models.CategoryCourse", b =>
                 {
                     b.HasOne("UdemyMVC.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("CategoryCourses")
                         .HasForeignKey("CategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -521,15 +467,11 @@ namespace UdemyMVC.Migrations
 
             modelBuilder.Entity("UdemyMVC.Models.Course", b =>
                 {
-                    b.HasOne("UdemyMVC.Models.Instructor", "Instructor")
-                        .WithMany("Courses")
+                    b.HasOne("UdemyMVC.Models.ApplicationModel", "Instructor")
+                        .WithMany("Course")
                         .HasForeignKey("InstructorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("UdemyMVC.Models.User", null)
-                        .WithMany("Course")
-                        .HasForeignKey("UserID");
 
                     b.Navigation("Instructor");
                 });
@@ -542,7 +484,7 @@ namespace UdemyMVC.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UdemyMVC.Models.User", "User")
+                    b.HasOne("UdemyMVC.Models.ApplicationModel", "User")
                         .WithMany("CourseRates")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -561,7 +503,7 @@ namespace UdemyMVC.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UdemyMVC.Models.User", "User")
+                    b.HasOne("UdemyMVC.Models.ApplicationModel", "User")
                         .WithMany("Enrolement")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -572,26 +514,34 @@ namespace UdemyMVC.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("UdemyMVC.Models.Instructor", b =>
-                {
-                    b.HasOne("UdemyMVC.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("UdemyMVC.Models.Topic", b =>
                 {
                     b.HasOne("UdemyMVC.Models.Chapter", "Chapter")
-                        .WithMany()
+                        .WithMany("Topics")
                         .HasForeignKey("ChapterID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Chapter");
+                });
+
+            modelBuilder.Entity("UdemyMVC.Models.ApplicationModel", b =>
+                {
+                    b.Navigation("Course");
+
+                    b.Navigation("CourseRates");
+
+                    b.Navigation("Enrolement");
+                });
+
+            modelBuilder.Entity("UdemyMVC.Models.Category", b =>
+                {
+                    b.Navigation("CategoryCourses");
+                });
+
+            modelBuilder.Entity("UdemyMVC.Models.Chapter", b =>
+                {
+                    b.Navigation("Topics");
                 });
 
             modelBuilder.Entity("UdemyMVC.Models.Course", b =>
@@ -603,20 +553,6 @@ namespace UdemyMVC.Migrations
                     b.Navigation("CourseRates");
 
                     b.Navigation("Enrollment");
-                });
-
-            modelBuilder.Entity("UdemyMVC.Models.Instructor", b =>
-                {
-                    b.Navigation("Courses");
-                });
-
-            modelBuilder.Entity("UdemyMVC.Models.User", b =>
-                {
-                    b.Navigation("Course");
-
-                    b.Navigation("CourseRates");
-
-                    b.Navigation("Enrolement");
                 });
 #pragma warning restore 612, 618
         }

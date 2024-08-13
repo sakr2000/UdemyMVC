@@ -1,44 +1,78 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using UdemyMVC.Models;
-using UdemyMVC.Repositories;
+using UdemyMVC.ServiceLayer;
 using UdemyMVC.ViewModels;
 
 namespace UdemyMVC.Controllers
 {
     public class CourseController : Controller
     {
-        ICourseRepository courseRepository;
-        public CourseController(ICourseRepository courseRepository)
+        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly UserManager<ApplicationModel> userManager;
+        private readonly SignInManager<ApplicationModel> signInManager;
+        private readonly UdemyDataBase context;
+
+        public CourseController(IWebHostEnvironment webHostEnvironment ,
+            UserManager<ApplicationModel>userManager , 
+            SignInManager<ApplicationModel>signInManager,
+            UdemyDataBase context)
         {
-            this.courseRepository = courseRepository;
+            this.webHostEnvironment = webHostEnvironment;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+            this.context = context;
         }
-        //async methoud should be awaited =>  use async Task 
-
-        public async Task<IActionResult> CourseDetailes(int id)
+        [HttpGet]
+        public IActionResult Add()
         {
-            Course course = await courseRepository.GetCoursesByCourseIdAsync(id);
+            return View("Add", new CourseViewModel());
 
-            if (course == null)
+        }
+        [HttpPost]
+        public IActionResult Add(CourseViewModel vm ,IFormFile photo)
+        {
+            if (!ModelState.IsValid) 
+            return View("Add", vm);
+                string? img = GetPhotoPath(photo);
+            if (img == null) {
+                ModelState.AddModelError("", "invalid photo");
+                return View("Add", vm);
+            } 
+            
+            vm.CourseImage = img; 
+            Course course = CourseViewToCourse.Convert(vm, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            context.Courses.Add(course);
+            context.SaveChanges();
+
+            return RedirectToAction("Main", "Home");
+        }
+
+
+        private string? GetPhotoPath(IFormFile imageFile)
+        {
+
+            if (imageFile != null && imageFile.Length > 0)
             {
-                return NotFound();
+                var uploadPath = Path.Combine(webHostEnvironment.WebRootPath, "CourseImage");
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+                var uniquePath = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                var photoPath = Path.Combine(uploadPath, uniquePath);
+                using (var filestream = new FileStream(photoPath, FileMode.Create))
+                {
+                    imageFile.CopyTo(filestream);
+                    filestream.Close();
+                }
+                return $"/CourseImage/+{uniquePath}";
             }
-            decimal sumRate = course.CourseRates.Select(c => c.Rate).Sum();
-            int countRate = course.CourseRates.Select(c => c.Rate).Count();
-            ViewBag.title = "Test Test Test";
-            CourseDetailsVM courseVM = new CourseDetailsVM();
-            courseVM.Id = course.ID;
-            courseVM.CourseName = course.CourseName;
-            courseVM.Title = course.Title ?? ViewBag.title;
-            courseVM.Description = course.Description;
-            courseVM.CourseImg = course.CourseImage;
-            courseVM.Price = course.Price;
-            courseVM.chapters = course.Chapters.Where(c => c.CourseId == id).ToList();
-            courseVM.Rating = (sumRate / countRate).ToString() ?? "1";
-            courseVM.NumberOfStudent = course.Enrollment.Count();
-            courseVM.Instructor = course.Instructor.User.FullName;
-            courseVM.Category = course.CategoryCourses.Select(c => c.Category.CategoryName).ToList();
+            return null;
 
-            return View("CourseDetailes", courseVM);
+
         }
     }
 }

@@ -30,10 +30,10 @@ namespace UdemyMVC.Controllers
 
 		[HttpGet]
 		public IActionResult Register()
-		{
-            if (signInManager.IsSignedIn(User))
+		{ 
+	     if (signInManager.IsSignedIn(User))
             {
-                return RedirectToAction("Index", "Home");
+				return RedirectToAction("Main", "Home");
             }
             return View("Register" , new RegisterViewModels());
 		}
@@ -42,13 +42,13 @@ namespace UdemyMVC.Controllers
 		public async Task<IActionResult> Register(RegisterViewModels vm ,IFormFile photo)
 		{
 			if (signInManager.IsSignedIn(User))
-			{ 
-			return RedirectToAction("Index", "Home");	
-			}
+			{
+				return RedirectToAction("Main", "Home");
+            }
 				if (ModelState.IsValid)
 				{
 
-					User user;
+					
 					if (!await roleManager.RoleExistsAsync(vm.Role))
 					{
 						IdentityResult result1 = await roleManager.CreateAsync(new IdentityRole(vm.Role));
@@ -88,15 +88,21 @@ namespace UdemyMVC.Controllers
 						ModelState.AddModelError("", "Failed to assign Role");
 						return View(vm);
 					}
-					user = RegisterUser.signApplicationModelToUser(userModel);
-					user.RoleName = vm.Role;
-					context.Users.Add(user);
-					List<Claim> claims = new List<Claim>();
-					claims.Add(new Claim(ClaimTypes.NameIdentifier, user.ID)); 
+				if (vm.Role != "User") { 
+					IdentityResult role2 = await userManager.AddToRoleAsync(userModel,"User");
+                    if (!role2.Succeeded)
+                    {
+                        ModelState.AddModelError("", "Failed to assign Role");
+                        return View(vm);
+                    }
+
+                }
+
+					
 		
-					await signInManager.SignInWithClaimsAsync(userModel, vm.RememberMe, claims);
+					await signInManager.SignInAsync(userModel, vm.RememberMe);
 					context.SaveChanges();
-					return RedirectToAction("Index", "Home");
+				return RedirectToAction("Main", "Home");
 				}
 
 

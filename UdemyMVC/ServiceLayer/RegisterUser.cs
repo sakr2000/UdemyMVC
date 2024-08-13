@@ -11,18 +11,10 @@ namespace UdemyMVC.ServiceLayer
 		user.UserName = vm.FullName;
 	    user.Email = vm.Email; 
 		user.Address = vm.Address;
-		user.Image = vm.Image;
+		user.Image = vm.Image; 
+			user.Field = vm.Field;
 		return user; 
 		}
-		public static User signApplicationModelToUser(ApplicationModel model) { 
-		User user = new User();
-			user.FullName = model.UserName;
-			user.Email = model.Email; 
-			user.Address= model.Address;
-			user.Image = model.Image;
-			user.ID = model.Id;
-	return user;
 		
-		}
 	}
 }

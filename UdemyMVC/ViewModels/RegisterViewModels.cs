@@ -23,7 +23,9 @@ namespace UdemyMVC.ViewModels
         public string Address { get; set; }
 		
         public string? Image { get; set; }
-        public string Role { get; set; }
+        public string Role { get; set; } 
+		
+		public string? Field { get; set; }
 		public bool RememberMe { get; set; }	 
 	}
 }

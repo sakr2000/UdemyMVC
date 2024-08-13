@@ -64,31 +64,33 @@
         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
           <div class="card" style="border-radius: 15px;">
             <div class="card-body p-5">
-              <h2 class="text-uppercase text-center mb-2">Create an account</h2>
+              <h2 class="text-uppercase text-center mb-2"
+                                style="color:#089bb2">
+                  Create an account</h2>
 
               <form asp-action="Register" enctype="multipart/form-data">
               <div asp-validation-summary="All" class="text-danger"></div>
 
                 <div data-mdb-input-init class="form-outline mb-2">
-                  <label class="form-label" asp-for="FullName">Your Name</label>
+                                    <label class="form-label" asp-for="FullName" style="color:#089bb2">Your Name</label>
                   <input asp-for="FullName" class="form-control form-control-lg" />
                   <span asp-validation-for="FullName" class="text-danger"></span>
                 </div>
 
                 <div data-mdb-input-init class="form-outline mb-2">
-                  <label class="form-label" asp-for="Email">Your Email</label>
+                                    <label class="form-label" asp-for="Email" style="color:#089bb2">Your Email</label>
                   <input asp-for="Email" class="form-control form-control-lg" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
                 <div data-mdb-input-init class="form-outline mb-2">
-                  <label class="form-label" for="form3Example4cg">Password</label>
+                                    <label class="form-label" for="form3Example4cg" style="color:#089bb2">Password</label>
                   <input asp-for="Password" class="form-control form-control-lg" />
            <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <div data-mdb-input-init class="form-outline mb-2">
-                  <label class="form-label" asp-for="ConfirmPassword">Repeat your password</label>
+                                    <label class="form-label" asp-for="ConfirmPassword" style="color:#089bb2">Repeat your password</label>
                   <input asp-for="ConfirmPassword" class="form-control form-control-lg" />
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
 
@@ -96,7 +98,7 @@
 
 
             <div data-mdb-input-init class="form-outline mb-2">
-                   <label class="form-label" asp-for="Address">Address</label>
+                                    <label class="form-label" asp-for="Address" style="color:#089bb2">Address</label>
                 <input asp-for="Address" class="form-control form-control-lg" />
                    <span asp-validation-for="Address" class="text-danger"></span>
 
@@ -104,33 +106,44 @@
 
 
             <div data-mdb-input-init class="form-outline mb-2">
-           <label class="form-label"  >Upload Image</label>
+                                    <label class="form-label" style="color:#089bb2">Upload Image</label>
            <input name="photo" class="form-control form-control-lg" type="file"required />
              </div>
 
                       <div data-mdb-input-init class="mb-2 d-flex ">
                           <div class="align-items-center d-flex me-1">
-                                        <label class="form-label">User :&ensp; </label>
-                 <input asp-for="Role" class="form-check" type="radio" value="User" checked />
+                                        <label class="form-label" style="color:#089bb2">User :&ensp; </label>
+                      <input onclick="disable()" asp-for="Role" class="form-check" type="radio" value="User" checked />
                                     </div >
                 <div class="align-items-center d-flex ms-1">
-                    <label class="form-label">Instructor :&ensp; </label>
-                <input asp-for="Role" class="form-check " type="radio" value="Instructor" />
+                                        <label class="form-label" style="color:#089bb2">Instructor :&ensp; </label>
+                <input onclick="enable()"  asp-for="Role" class="form-check " type="radio" value="Instructor" />
                </div>
                <span asp-validation-for="Role" class="text-danger"></span>
-                                </div> 
+                                </div>
+              <div data-mdb-input-init class="form-outline mb-2">
+                <label class="form-label" asp-for="Field" style="color:#089bb2">Field</label>
+                <input asp-for="Field" class="form-control form-control-lg  field"id="field"  disabled/>
+                <span asp-validation-for="Field" class="text-danger"></span>
+
+               </div>
              <div data-mdb-input-init class="form-outline mb-2">
-         <label class="form-check-label" asp-for="RememberMe">Remember Me</label>
+                                    <label class="form-check-label" asp-for="RememberMe" style="color:#089bb2">Remember Me</label>
        <input asp-for="RememberMe" class="form-check-input " />
                                 </div>
 
                 <div class="d-flex justify-content-center">
                   <button  type="submit" data-mdb-button-init
-                    data-mdb-ripple-init class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Register</button>
+                    data-mdb-ripple-init class="btn  btn-block btn-lg gradient-custom-4 text-body"
+                                            style="background-color:#06bbcc;color:#083744">
+                    Register</button>
                 </div>
 
                 <p class="text-center text-muted mt-2 mb-0">Have already an account? <a asp-controller="Account"
-                    class="fw-bold text-body" asp-action="Login"><u>Login here</u></a></p>
+                                                                class="fw-bold text-body" asp-action="Login">
+                                                                <br /> 
+                                                                <u style="color:#089bb2" class="text-center">Login here</u></a>
+                                </p>
 
               </form>
 
@@ -143,7 +156,16 @@
 </section>
 
 
-
+<script>
+    var input = document.getElementById('field');
+  function enable(){ 
+     input.removeAttribute('disabled')
+  }
+    function disable() {
+        input.value=" "
+        input.setAttribute('disabled', 'disabled')
+    }
+</script>
 
 
 

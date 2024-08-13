@@ -26,18 +26,20 @@ namespace UdemyMVC.Models
         [MaxFileSize(5 * 1024 * 1024)] // 5 MB
         [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png" })]
 
-        public string CourseImage { get; set; }	
-		public ICollection<Chapter> Chapters { get; set; } // Navigation property
+        public string CourseImage { get; set; }
+		public int Hours { get; set; } = 60;
+        [InverseProperty("Course")]
+		public virtual  ICollection<Chapter>? Chapters { get; set; } // Navigation property
 
 
 		/*-----------------------------------------------------------------*/
 		[ForeignKey("Instructor")]
-        public int InstructorID { get; set; }
+        public string InstructorID { get; set; }
 		[ForeignKey("InstructorID")]
-		public virtual Instructor Instructor { get; set; }
+		public virtual ApplicationModel Instructor { get; set; }
 		/*-----------------------------------------------------------------------------------*/
 		//Multiple Category Category!
-		public virtual ICollection<CategoryCourse> CategoryCourses { get; set; }
+		public virtual ICollection<CategoryCourse>? CategoryCourses { get; set; }
 		/*-----------------------------------------------------------------------------------*/
 		public virtual ICollection<Enrollment>? Enrollment { get; set; }
 		/*-----------------------------------------------------------------------------------*/

@@ -15,6 +15,6 @@ namespace UdemyMVC.Models
         [ForeignKey("CourseID")]
         public virtual Course Course { get; set; }
         [ForeignKey("UserID")]
-        public virtual User User { get; set; }
+        public virtual ApplicationModel User { get; set; }
     }
 }

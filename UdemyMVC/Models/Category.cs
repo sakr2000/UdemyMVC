@@ -11,9 +11,7 @@ namespace UdemyMVC.Models
 		[StringLength(50)]
         public string CategoryName { get; set; }
 		/*-----------------------------------------------------------------------------------*/
-		//Deleted
-		//[InverseProperty("Category")]
-		//public virtual ICollection<Course>? Courses { get; set; }
+		public virtual ICollection<CategoryCourse> CategoryCourses{ get; set; }
 		/*-----------------------------------------------------------------------------------*/
 
 

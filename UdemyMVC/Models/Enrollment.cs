@@ -10,11 +10,11 @@ namespace UdemyMVC.Models
         public string UserID { get; set; }
         [Required]
         [DataType(DataType.DateTime)]
-        public DateTime EnrollmentDate { get; set; }= DateTime.Now; 
+        public DateTime EnrollmentDate=> DateTime.Now; 
 
 
         [ForeignKey("UserID")]
-        public virtual  User User { get; set; }
+        public virtual  ApplicationModel User { get; set; }
         [ForeignKey("CourseID")]
         public virtual Course Course { get; set; }   
         
